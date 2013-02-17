@@ -1,6 +1,6 @@
 " encoding: utf 8 
 filetype off
-call pathogen#runtime_append_all_bundles()
+execute pathogen#infect()
 call pathogen#helptags()
 filetype plugin indent on
 set nocompatible
