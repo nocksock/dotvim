@@ -37,3 +37,6 @@
 [submodule "vim/bundle/commentary"]
 	path = vim/bundle/commentary
 	url = git://github.com/tpope/vim-commentary.git
+[submodule "vim/bundle/fish"]
+	path = vim/bundle/fish
+	url = git://github.com/vim-scripts/fish.vim.git
