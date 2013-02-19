@@ -22,9 +22,6 @@
 [submodule "vim/bundle/surround"]
 	path = vim/bundle/surround
 	url = git://github.com/tpope/vim-surround.git
-[submodule "vim/javascript"]
-	path = vim/javascript
-	url = git://github.com/pangloss/vim-javascript.git
 [submodule "vim/bundle/ultisnips"]
 	path = vim/bundle/ultisnips
 	url = git://github.com/SirVer/ultisnips.git
@@ -40,3 +37,9 @@
 [submodule "vim/bundle/fish"]
 	path = vim/bundle/fish
 	url = git://github.com/vim-scripts/fish.vim.git
+[submodule "vim/bundle/javascript"]
+	path = vim/bundle/javascript
+	url = git://github.com/pangloss/vim-javascript.git
+[submodule "vim/bundle/syntastic"]
+	path = vim/bundle/syntastic
+	url = git://github.com/scrooloose/syntastic.git
