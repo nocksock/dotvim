@@ -203,6 +203,12 @@ augroup ft_css
   au BufNewFile,BufRead *.scss,*.less,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
 augroup END
 " }}}
+" fish {{{
+augroup ft_fish
+  au!
+  au BufNewFile,BufRead *.fish setlocal filetype=fish
+augrou ENDj
+" }}}
 " Ruby {{{
 
 augroup ft_ruby
