@@ -6,7 +6,6 @@ filetype plugin indent on
 set nocompatible
 set encoding=utf-8
 " set fileencodings=utf-8,latin1
-
 " Basic Options"{{{ "
 let mapleader = ","
 let maplocalleader = "\\"
@@ -251,6 +250,14 @@ vmap <Leader>b :<C-U>!git blame <C-R>=expand("%:p") <CR> \| sed -n <C-R>=line("'
 "}}}
 " Mappings for plugins and convenience {{{
 let g:ctrlp_map = '<c-p>'
+" ctrlp
+let g:ctrlp_match_window_bottom = 0
+let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_custom_ignore = '\v\~$|\.(o|swp|pyc|wav|mp3|ogg|blend)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|__init__\.py'
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_dotfiles = 0
+let g:ctrlp_switch_buffer = 0
+
 let g:EasyMotion_leader_key = '<Leader>m'
 noremap <Leader>cc :CtrlPClearCache<CR>
 map <S-TAB> :NERDTreeToggle<CR>
