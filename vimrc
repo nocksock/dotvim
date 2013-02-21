@@ -258,7 +258,13 @@ let g:ctrlp_working_path_mode = 0
 let g:ctrlp_dotfiles = 0
 let g:ctrlp_switch_buffer = 0
 
+" syntastic
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+
+" easymotion
 let g:EasyMotion_leader_key = '<Leader>m'
+
 noremap <Leader>cc :CtrlPClearCache<CR>
 map <S-TAB> :NERDTreeToggle<CR>
 
@@ -289,6 +295,7 @@ nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 command Vrc :vsplit ~/.vimrc
 map <Leader>vrc :Vrc<CR>
+command Reload :source ~/.vimrc
 
 " Gundo
 nnoremap <F5> :GundoToggle<CR>
@@ -302,8 +309,10 @@ nnoremap <silent> <F2> :YRShow<cr>
 " }}}
 " Ctags stuff {{{
 " Taglist
+let g:tagbar_type_javascript = {
+    \ 'ctagsbin' : '/usr/local/bin/jsctags'
+\ }
 map <F3> :TagbarToggle<CR><C-W><C-T>
-let Tlist_Ctags_Cmd="/usr/local/Cellar/ctags/5.8/bin/ctags"
 " Set the tag file search order
 set tags=./tags;
 "}}}
