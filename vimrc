@@ -312,7 +312,7 @@ nnoremap <silent> <F2> :YRShow<cr>
 let g:tagbar_type_javascript = {
     \ 'ctagsbin' : '/usr/local/bin/jsctags'
 \ }
-map <F3> :TagbarToggle<CR><C-W><C-T>
+map <F3> :TagbarToggle<CR>
 " Set the tag file search order
 set tags=./tags;
 "}}}
