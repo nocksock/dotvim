@@ -40,6 +40,7 @@ set list
 set formatoptions=qrn1
 set undofile
 set shell=/bin/zsh
+let g:user_zen_leader_key = '<c-y>'
 
 " Tabs, spaces, wrapping {{{
 set tabstop=2
@@ -81,7 +82,7 @@ syntax on
 "}}}
 "  Statusline and listchars
 if has("gui")
-  set listchars=tab:>⋅,eol:¬,trail:-,extends:↩,precedes:↪
+  set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
   set statusline+=%<%f\%h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 endif
 " Wildmenu "{{{
@@ -99,8 +100,8 @@ set backupskip=/tmp/*,/private/tmp/*"
 au FocusLost * :wa
 
 " save on ^s
-map <C-s> <esc>:w<CR>
-imap <C-s> <esc>:w<CR>i
+map <C-s> <esc>:silent :Gcommit<CR>
+imap <C-s> <esc>:silent :Gcommit<CR>i
 command Q q " Bind :Q to :q
 command W w " Bind :W to :w
 " Resize splits when the window is resized
@@ -251,8 +252,6 @@ vmap <Leader>b :<C-U>!git blame <C-R>=expand("%:p") <CR> \| sed -n <C-R>=line("'
 " Mappings for plugins and convenience {{{
 let g:ctrlp_map = '<c-p>'
 " ctrlp
-let g:ctrlp_match_window_bottom = 0
-let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_custom_ignore = '\v\~$|\.(o|swp|pyc|wav|mp3|ogg|blend)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|__init__\.py'
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_dotfiles = 0
