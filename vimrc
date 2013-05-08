@@ -46,7 +46,7 @@ let g:user_zen_leader_key = '<c-y>'
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set expandtab
+set noexpandtab
 set nowrap
 set textwidth=80
 set formatoptions=qrn1
@@ -62,15 +62,11 @@ if has("gui_running")
   set columns=150
   set lines=45
   set fuoptions=maxvert,maxhorz
-else
-  " use 16 colors outside of macvim
-  " let g:solarized_termcolors=16
 endif
-let &t_Co=256
-colors molokai
 
-" set background=dark
-" colorscheme solarized
+set background=dark
+colorscheme solarized
+call togglebg#map("<F6>")
 
 " Highlight the status line
 highlight StatusLine ctermfg=blue ctermbg=black
@@ -98,7 +94,7 @@ set backupskip=/tmp/*,/private/tmp/*"
 
 " Save when losing focus
 au FocusLost * :wa
-
+let g:evervim_devtoken='S=s18:U=1e538b:E=144db209f29:C=13d836f732d:P=1cd:A=en-devtoken:V=2:H=d46d47a0e515720e39eff7d7f6b626da'
 " save on ^s
 map <C-s> <esc>:silent :Gcommit<CR>
 imap <C-s> <esc>:silent :Gcommit<CR>i
@@ -213,7 +209,7 @@ augrou ENDj
 
 augroup ft_ruby
     au!
-    au BufNewfile,BufRead *.thor setlocal filetype=ruby 
+    au BufNewfile,BufRead *.thor,Guardfile setlocal filetype=ruby 
 augroup END
 
 " }}}
@@ -231,6 +227,9 @@ augroup END
 let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
 augroup ft_pde
     au BufNewFile,BufRead *.pde setlocal filetype=java
+augroup END
+augroup ft_jshintrc
+    au BufNewFile,BufRead .jshintrc setlocal filetype=javascript
 augroup END
 " Markdown {{{
 augroup ft_markdown
@@ -260,12 +259,10 @@ let g:ctrlp_switch_buffer = 0
 " syntastic
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
-
-" easymotion
-let g:EasyMotion_leader_key = '<Leader>m'
+let g:UltiSnipsExpandTrigger="<s-tab>"
 
 noremap <Leader>cc :CtrlPClearCache<CR>
-map <S-TAB> :NERDTreeToggle<CR>
+map <F4> :NERDTreeToggle<CR>
 
 " Toggle "keep current line centered" mode
 nnoremap <leader>C :let &scrolloff=999-&scrolloff<cr>
