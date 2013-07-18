@@ -4,6 +4,7 @@ execute pathogen#infect()
 call pathogen#helptags()
 filetype plugin indent on
 set nocompatible
+set t_Co=256
 set encoding=utf-8
 " set fileencodings=utf-8,latin1
 " Basic Options"{{{ "
@@ -57,16 +58,16 @@ set colorcolumn=+1
 "Invisible character colors
 highlight NonText guifg=#4a4a59
 highlight SpecialKey guifg=#4a4a59
+let g:molokai_original = 1
+let g:rehash256 = 1
+set background=dark
+colors molokai
 
 if has("gui_running")
   set columns=150
   set lines=45
   set fuoptions=maxvert,maxhorz
 endif
-
-set background=dark
-colorscheme solarized
-call togglebg#map("<F6>")
 
 " Highlight the status line
 highlight StatusLine ctermfg=blue ctermbg=black
@@ -210,6 +211,7 @@ augrou ENDj
 augroup ft_ruby
     au!
     au BufNewfile,BufRead *.thor,Guardfile setlocal filetype=ruby 
+    au Filetype ruby set et
 augroup END
 
 " }}}
@@ -259,7 +261,6 @@ let g:ctrlp_switch_buffer = 0
 " syntastic
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
-let g:UltiSnipsExpandTrigger="<s-tab>"
 
 noremap <Leader>cc :CtrlPClearCache<CR>
 map <F4> :NERDTreeToggle<CR>
