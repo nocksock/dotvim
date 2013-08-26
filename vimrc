@@ -272,9 +272,11 @@ map <Leader>co :TComment<CR>
 " Edit another file in the same directory as the current file
 " uses expression to extract path from current file's path
 map <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
-map <Leader>s :split <C-R>=expand("%:p:h") . '/'<CR>
 map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
 
+nnoremap <Leader>t :call RunCurrentSpecFile()<CR>
+nnoremap <Leader>s :call RunNearestSpec()<CR>
+nnoremap <Leader>l :call RunLastSpec()<CR>
 " 'in next()' textobject
 vnoremap <silent> in( :<C-U>normal! f(vi(<cr>
 onoremap <silent> in( :<C-U>normal! f(vi(<cr>
