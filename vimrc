@@ -220,6 +220,7 @@ augroup ft_javascript
     au!
 
     au FileType javascript setlocal foldmethod=marker
+		au BufNewFile, BufRead Gruntfile setlocal filetype=javascript
 
     " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
     " positioned inside of them AND the following code doesn't get unfolded.
@@ -227,8 +228,11 @@ augroup ft_javascript
 augroup END
 " }}}
 let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
+let g:UltiSnipsEditSplit = 'vertical'
 augroup ft_pde
     au BufNewFile,BufRead *.pde setlocal filetype=java
+		au Filetype java nmap <Leader>bb :!processing-java --run --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
+		au Filetype java nmap <Leader>bf :!processing-java --present --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
 augroup END
 augroup ft_jshintrc
     au BufNewFile,BufRead .jshintrc setlocal filetype=javascript
