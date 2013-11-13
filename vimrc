@@ -147,7 +147,6 @@ map <C-l> <C-w>l
 map <leader>w <C-w>v<C-w>l
 " Window management
 map <C-t> <esc>:tabnew<CR>
-map <C-x> <C-w>c
 " Window resizing
 nnoremap <c-left> 5<c-w>>
 nnoremap <c-right> 5<c-w><
