@@ -1,7 +1,38 @@
 " encoding: utf 8 
 filetype off
-execute pathogen#infect()
-call pathogen#helptags()
+set rtp+=~/.vim/bundle/vundle
+call vundle#rc()
+
+Bundle 'gmarik/vundle'
+Bundle 'tomasr/molokai.git'
+Bundle 'tpope/vim-fugitive.git'
+Bundle 'godlygeek/tabular.git'
+Bundle 'mattn/zencoding-vim.git'
+Bundle 'kien/ctrlp.vim.git'
+Bundle 'Lokaltog/vim-powerline.git'
+Bundle 'tpope/vim-rails.git'
+Bundle 'tpope/vim-surround.git'
+Bundle 'SirVer/ultisnips.git'
+Bundle 'sjl/badwolf.git'
+Bundle 'scrooloose/nerdtree.git'
+Bundle 'tpope/vim-commentary.git'
+Bundle 'vim-scripts/fish.vim.git'
+Bundle 'pangloss/vim-javascript.git'
+Bundle 'scrooloose/syntastic.git'
+Bundle 'majutsushi/tagbar.git'
+Bundle 'sjl/gundo.vim.git'
+Bundle 'othree/html5.vim.git'
+Bundle 'tpope/vim-repeat.git'
+Bundle 'Raimondi/delimitMate.git'
+Bundle 'Lokaltog/vim-easymotion.git'
+Bundle 'altercation/vim-colors-solarized.git'
+Bundle 'terryma/vim-multiple-cursors.git'
+Bundle 'rizzatti/funcoo.vim.git'
+Bundle 'rizzatti/dash.vim.git'
+Bundle 'thoughtbot/vim-rspec'
+Bundle 'mattn/gist-vim.git'
+Bundle 'mattn/webapi-vim.git'
+
 filetype plugin indent on
 set nocompatible
 set t_Co=256
