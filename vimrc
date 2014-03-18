@@ -1,47 +1,71 @@
-" encoding: utf 8 
+" encoding: utf 8
+"
+" Welcome to my crib.
+"
+" Author: Nils Riedemann
+
+" Vundle Stuff {{{
+" needed for init
+
 filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
-Bundle 'gmarik/vundle'
-Bundle 'tomasr/molokai.git'
-Bundle 'tpope/vim-fugitive.git'
-Bundle 'godlygeek/tabular.git'
-Bundle 'mattn/zencoding-vim.git'
-Bundle 'kien/ctrlp.vim.git'
-Bundle 'Lokaltog/vim-powerline.git'
-Bundle 'tpope/vim-rails.git'
-Bundle 'tpope/vim-surround.git'
-Bundle 'SirVer/ultisnips.git'
-Bundle 'sjl/badwolf.git'
-Bundle 'scrooloose/nerdtree.git'
-Bundle 'tpope/vim-commentary.git'
-Bundle 'vim-scripts/fish.vim.git'
-Bundle 'pangloss/vim-javascript.git'
-Bundle 'scrooloose/syntastic.git'
-Bundle 'majutsushi/tagbar.git'
-Bundle 'sjl/gundo.vim.git'
-Bundle 'othree/html5.vim.git'
-Bundle 'tpope/vim-repeat.git'
-Bundle 'Raimondi/delimitMate.git'
 Bundle 'Lokaltog/vim-easymotion.git'
-Bundle 'altercation/vim-colors-solarized.git'
-Bundle 'terryma/vim-multiple-cursors.git'
-Bundle 'rizzatti/funcoo.vim.git'
+"autoclose of brackets, parenths etc
+Bundle 'Raimondi/delimitMate.git' 
+
+Bundle 'SirVer/ultisnips.git'
+Bundle 'bling/vim-airline.git'
+Bundle 'gmarik/vundle'
+Bundle 'godlygeek/tabular.git'
+Bundle 'majutsushi/tagbar.git'
+Bundle 'mattn/emmet-vim'
+Bundle 'othree/html5.vim.git'
+Bundle 'pangloss/vim-javascript.git'
 Bundle 'rizzatti/dash.vim.git'
+Bundle 'rizzatti/funcoo.vim.git'
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/vimshell.vim'
+Bundle 'Shougo/neocomplete.vim'
+Bundle 'Shougo/unite.vim'
+Bundle 'scrooloose/nerdtree.git'
+Bundle 'sjl/gundo.vim.git'
+Bundle 'terryma/vim-multiple-cursors.git'
 Bundle 'thoughtbot/vim-rspec'
-Bundle 'mattn/gist-vim.git'
-Bundle 'mattn/webapi-vim.git'
+Bundle 'tomasr/molokai.git'
+Bundle 'tpope/vim-commentary.git'
+Bundle 'tpope/vim-fugitive.git'
+Bundle 'tpope/vim-repeat.git'
+Bundle 'tpope/vim-surround.git'
+Bundle 'tpope/vim-vinegar.git'
+Bundle 'tpope/vim-unimpaired.git'
+Bundle 'tpope/vim-dispatch.git'
 
 filetype plugin indent on
 set nocompatible
+"}}}
 set t_Co=256
 set encoding=utf-8
-" set fileencodings=utf-8,latin1
+
+" vimshell {{{
+let g:vimshell_prompt = '$ '
+let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+" }}}
+" Airline config {{{
+let g:airline_powerline_fonts = 0
+let g:airline_theme='powerlineish'
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline#extensions#branch#enabled = 1
+" }}}
 " Basic Options"{{{ "
 let mapleader = ","
 let maplocalleader = "\\"
-let g:Powerline_symbols = 'fancy'
+
+set number
+set relativenumber
+nmap <leader>n :setlocal nu!<CR>:setlocal rnu!<CR>
 
 set shiftround " When at 3 spaces and I hit >>, go to 4, not 5.
 set foldmethod=marker
@@ -60,19 +84,20 @@ set autoread
 
 if has('gui_running')
   set guioptions-=T
-  set guifont=Ubuntu\ Mono\ for\ Powerline:h14
+  set guifont=Ubuntu\ Mono\ for\ Powerline:h16
 endif
 
 set laststatus=2  " Always show status line.
-set relativenumber
-set gdefault " assume the /g flag on :s substitutions to replace all matches in a line
-set autoindent " always set autoindenting on
-set visualbell 
+
+set gdefault
+set autoindent
+set visualbell
 set list
 set formatoptions=qrn1
 set undofile
 set shell=/bin/zsh
 let g:user_zen_leader_key = '<c-y>'
+set t_ut=
 
 " Tabs, spaces, wrapping {{{
 set tabstop=2
@@ -114,15 +139,15 @@ if has("gui")
   set statusline+=%<%f\%h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 endif
 " Wildmenu "{{{
+set wildmode=longest,list,full
 set wildmenu
-set wildmode=longest,list
 set wildignore+=.hg,.git,.svn                    " Version control
 set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg   " binary images
 set wildignore+=*.sw?                            " Vim swap files
 set wildignore+=*.DS_Store                       " OSX bullshit
 "}}}
 " Make Vim able to edit crontab files again.
-set backupskip=/tmp/*,/private/tmp/*" 
+set backupskip=/tmp/*,/private/tmp/*"
 
 " Save when losing focus
 au FocusLost * :wa
@@ -170,17 +195,16 @@ nnoremap g, g,zz
 
 " }}}
 " Window Management "{{{
+
 " Easy window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 map <leader>w <C-w>v<C-w>l
+
 " Window management
 map <C-t> <esc>:tabnew<CR>
-" Window resizing
-nnoremap <c-left> 5<c-w>>
-nnoremap <c-right> 5<c-w><
 
 map <Leader>rr :redraw!<cr>
 "}}}
@@ -211,12 +235,11 @@ iabbrev lsad ಥ_ಥ
 iabbrev lhap ಥ‿ಥ
 "}}}
 " FileType Specifics {{{
-" HTML"{{{
+" .HTML"{{{
 " fold current tag
 nnoremap <leader>ft Vatzf
-
 " }}}
-" CSS "{{{
+" .CSS "{{{
 augroup ft_css
   au!
   au BufNewFile,BufRead *.less setlocal filetype=less
@@ -230,92 +253,84 @@ augroup ft_css
   au BufNewFile,BufRead *.scss,*.less,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
 augroup END
 " }}}
-" fish {{{
-augroup ft_fish
-  au!
-  au BufNewFile,BufRead *.fish setlocal filetype=fish
-augrou ENDj
-" }}}
-" Ruby {{{
+" .RB Ruby {{{
 
 augroup ft_ruby
     au!
-    au BufNewfile,BufRead *.thor,Guardfile setlocal filetype=ruby 
+    au BufNewfile,BufRead *.thor,Guardfile setlocal filetype=ruby
     au Filetype ruby set et
 augroup END
 
 " }}}
-" Javascript {{{
+" .JS JavaScript {{{
 augroup ft_javascript
-    au!
-
-    au FileType javascript setlocal foldmethod=marker
-		au BufNewFile, BufRead Gruntfile setlocal filetype=javascript
-
-    " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
-    " positioned inside of them AND the following code doesn't get unfolded.
-    au Filetype javascript inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
+	au!
+	au BufNewFile,BufRead .jshintrc setlocal filetype=javascript
+	au FileType javascript setlocal foldmethod=marker
+	au BufNewFile, BufRead Gruntfile setlocal filetype=javascript
+	" Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
+	" positioned inside of them AND the following code doesn't get unfolded.
+	au Filetype javascript inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
 augroup END
 " }}}
-let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
-let g:UltiSnipsEditSplit = 'vertical'
+" .PDE Processing {{{
 augroup ft_pde
-    au BufNewFile,BufRead *.pde setlocal filetype=java
-		au Filetype java nmap <Leader>bb :!processing-java --run --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
-		au Filetype java nmap <Leader>bf :!processing-java --present --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
+	au BufNewFile,BufRead *.pde setlocal filetype=java
+	au Filetype java nmap <Leader>bb :!processing-java --run --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
+	au Filetype java nmap <Leader>bf :!processing-java --present --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
 augroup END
-augroup ft_jshintrc
-    au BufNewFile,BufRead .jshintrc setlocal filetype=javascript
-augroup END
-" Markdown {{{
-augroup ft_markdown
-    au!
-
-    au BufNewFile,BufRead *.m*down setlocal filetype=markdown
-    au BufNewFile,BufRead *.md setlocal filetype=markdown
-
-    " Use <localleader>1/2/3 to add headings.
-    au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=
-    au Filetype markdown nnoremap <buffer> <localleader>2 yypVr-
-    au Filetype markdown nnoremap <buffer> <localleader>3 I### <ESC>
-augroup END
-" }}}
-" }}}
-" git stuff"{{{
-vmap <Leader>b :<C-U>!git blame <C-R>=expand("%:p") <CR> \| sed -n <C-R>=line("'<") <CR>,<C-R>=line("'>") <CR>p <CR>
 "}}}
+" .MD Markdown {{{
+augroup ft_markdown
+	au!
+	au BufNewFile,BufRead *.m*down setlocal filetype=markdown
+	au BufNewFile,BufRead *.md setlocal filetype=markdown
+	" Use <localleader>1/2/3 to add headings.
+	au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=
+	au Filetype markdown nnoremap <buffer> <localleader>2 yypVr-
+	au Filetype markdown nnoremap <buffer> <localleader>3 I### <ESC>
+augroup END
+" }}}
+" }}}
 " Mappings for plugins and convenience {{{
-let g:ctrlp_map = '<c-p>'
-" ctrlp
-let g:ctrlp_custom_ignore = '\v\~$|\.(o|swp|pyc|wav|mp3|ogg|blend)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|__init__\.py'
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_dotfiles = 0
-let g:ctrlp_switch_buffer = 0
+" neocomplete {{{
+let g:neocomplete#enable_at_startup = 1
+" }}}
+" unite.vim settings {{{
+let g:unite_source_history_yank_enable=1
+let g:unite_source_history_yank_limit=1000
 
-" syntastic
+call unite#custom#source('file_rec', 'ignore_pattern', 'node_modules')
+map <C-P> :Unite -start-insert file_rec<CR>
+map <C-B> :Unite buffer<CR>
+nnoremap <space>/ :Unite grep:.<cr>
+"}}}
+" syntastic {{{
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
+let g:syntastic_always_populate_loc_list = 1
+"}}}
 
-noremap <Leader>cc :CtrlPClearCache<CR>
 map <F4> :NERDTreeToggle<CR>
+
+let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
+let g:UltiSnipsEditSplit = 'vertical'
 
 " Toggle "keep current line centered" mode
 nnoremap <leader>C :let &scrolloff=999-&scrolloff<cr>
-" Use to toggle comment current line
-map <Leader>co :TComment<CR>
+
 " Edit another file in the same directory as the current file
 " uses expression to extract path from current file's path
 map <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
 map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
 
-nnoremap <Leader>t :call RunCurrentSpecFile()<CR>
 nnoremap <Leader>s :call RunNearestSpec()<CR>
 nnoremap <Leader>l :call RunLastSpec()<CR>
 " 'in next()' textobject
 vnoremap <silent> in( :<C-U>normal! f(vi(<cr>
 onoremap <silent> in( :<C-U>normal! f(vi(<cr>
 
-" Tabular 
+" Tabular
 if exists(":Tabularize")
   nmap <Leader>a= :Tabularize /=<CR>
   vmap <Leader>a= :Tabularize /=<CR>
@@ -327,18 +342,11 @@ endif
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 command Vrc :vsplit ~/.vimrc
-map <Leader>vrc :Vrc<CR>
 command Reload :source ~/.vimrc
 
 " Gundo
 nnoremap <F5> :GundoToggle<CR>
 
-" Use Ack instead of grep
-set grepprg=ack
-map <leader>a<space> :Ack
-
-" Yankring "
-nnoremap <silent> <F2> :YRShow<cr>
 " }}}
 " Ctags stuff {{{
 " Taglist
@@ -349,26 +357,6 @@ map <F3> :TagbarToggle<CR>
 " Set the tag file search order
 set tags=./tags;
 "}}}
-" Shell {{{
-function! s:ExecuteInShell(command) " {{{
-    let command = join(map(split(a:command), 'expand(v:val)'))
-    let winnr = bufwinnr('^' . command . '$')
-    silent! execute  winnr < 0 ? 'botright vnew ' . fnameescape(command) : winnr . 'wincmd w'
-    setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap nonumber
-    echo 'Execute ' . command . '...'
-    silent! execute 'silent %!'. command
-    silent! redraw
-    silent! execute 'au BufUnload <buffer> execute bufwinnr(' . bufnr('#') . ') . ''wincmd w'''
-    silent! execute 'nnoremap <silent> <buffer> <LocalLeader>r :call <SID>ExecuteInShell(''' . command . ''')<CR>:AnsiEsc<CR>'
-    silent! execute 'nnoremap <silent> <buffer> q :q<CR>'
-    silent! execute 'AnsiEsc'
-    echo 'Shell command ' . command . ' executed.'
-endfunction " }}}
-command! -complete=shellcmd -nargs=+ Shell call s:ExecuteInShell(<q-args>)
-nnoremap <leader>! :Shell 
-" }}}
-
-nmap <Leader>x <Plug>ToggleAutoCloseMappings
 
 " Make sure Vim returns to the same line when you reopen a file.
 augroup line_return
