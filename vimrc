@@ -15,9 +15,9 @@ Bundle 'Lokaltog/vim-easymotion.git'
 "autoclose of brackets, parenths etc
 Bundle 'Raimondi/delimitMate.git' 
 
+Bundle 'gmarik/vundle'
 Bundle 'SirVer/ultisnips.git'
 Bundle 'bling/vim-airline.git'
-Bundle 'gmarik/vundle'
 Bundle 'godlygeek/tabular.git'
 Bundle 'majutsushi/tagbar.git'
 Bundle 'mattn/emmet-vim'
@@ -65,7 +65,7 @@ let maplocalleader = "\\"
 
 set number
 set relativenumber
-nmap <leader>n :setlocal nu!<CR>:setlocal rnu!<CR>
+nnoremap <leader>n :setlocal nu!<CR>:setlocal rnu!<CR>
 
 set shiftround " When at 3 spaces and I hit >>, go to 4, not 5.
 set foldmethod=marker
@@ -81,6 +81,9 @@ set showmode
 set backupdir=/tmp
 set directory=/tmp " Don't clutter my dirs up with swp and tmp files
 set autoread
+
+" Don't try to highlight lines longer than 800 characters.
+set synmaxcol=800
 
 if has('gui_running')
   set guioptions-=T
@@ -124,7 +127,16 @@ if has("gui_running")
   set lines=45
   set fuoptions=maxvert,maxhorz
 endif
+" Trailing whitespace {{{
+" Only shown when not in insert mode so I don't go insane.
 
+augroup trailing
+    au!
+    au InsertEnter * :set listchars-=trail:⌴
+    au InsertLeave * :set listchars+=trail:⌴
+augroup END
+
+" }}}
 " Highlight the status line
 highlight StatusLine ctermfg=blue ctermbg=black
 
@@ -138,6 +150,11 @@ if has("gui")
   set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
   set statusline+=%<%f\%h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 endif
+
+" Better Completion
+set complete=.,w,b,u,t
+set completeopt=longest,menuone,preview
+
 " Wildmenu "{{{
 set wildmode=longest,list,full
 set wildmenu
@@ -150,15 +167,19 @@ set wildignore+=*.DS_Store                       " OSX bullshit
 set backupskip=/tmp/*,/private/tmp/*"
 
 " Save when losing focus
-au FocusLost * :wa
+augroup global_autocommands
+	autocmd!
+	au FocusLost * :wa
+	" Resize splits when the window is resized
+	au VimResized * exe "normal! \<c-w>="
+augroup END
+
 let g:evervim_devtoken='S=s18:U=1e538b:E=144db209f29:C=13d836f732d:P=1cd:A=en-devtoken:V=2:H=d46d47a0e515720e39eff7d7f6b626da'
 " save on ^s
-map <C-s> <esc>:silent :Gcommit<CR>
-imap <C-s> <esc>:silent :Gcommit<CR>i
+nnoremap <C-s> <esc>:silent :Gcommit<CR>
+inoremap <C-s> <esc>:silent :Gcommit<CR>i
 command Q q " Bind :Q to :q
 command W w " Bind :W to :w
-" Resize splits when the window is resized
-au VimResized * exe "normal! \<c-w>="
 "}}}
 " Search Options"{{{
 nnoremap / /\v
@@ -203,9 +224,9 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 map <leader>w <C-w>v<C-w>l
 
-" Window management
-map <C-t> <esc>:tabnew<CR>
 
+
+map <C-t> <esc>:tabnew<CR>
 map <Leader>rr :redraw!<cr>
 "}}}
 " Modeline Magic"{{{
@@ -228,6 +249,17 @@ set backupdir=~/.vim/tmp/backup// " backups
 set directory=~/.vim/tmp/swap//   " swap files
 set backup                        " enable backups
 set noswapfile                    " It's 2012, Vim.
+
+" Make those folders automatically if they don't already exist.
+if !isdirectory(expand(&undodir))
+    call mkdir(expand(&undodir), "p")
+endif
+if !isdirectory(expand(&backupdir))
+    call mkdir(expand(&backupdir), "p")
+endif
+if !isdirectory(expand(&directory))
+    call mkdir(expand(&directory), "p")
+endif
 " }}}
 " Global abbreviations"{{{
 iabbrev ldis ಠ_ಠ
@@ -276,8 +308,8 @@ augroup END
 " .PDE Processing {{{
 augroup ft_pde
 	au BufNewFile,BufRead *.pde setlocal filetype=java
-	au Filetype java nmap <Leader>bb :!processing-java --run --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
-	au Filetype java nmap <Leader>bf :!processing-java --present --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
+	au Filetype java nnoremap <Leader>bb :!processing-java --run --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
+	au Filetype java nnoremap <Leader>bf :!processing-java --present --sketch=$(pwd) --output=$(pwd)/tmp --force<CR>
 augroup END
 "}}}
 " .MD Markdown {{{
@@ -285,6 +317,8 @@ augroup ft_markdown
 	au!
 	au BufNewFile,BufRead *.m*down setlocal filetype=markdown
 	au BufNewFile,BufRead *.md setlocal filetype=markdown
+	au FileType markdown setlocal number numberwidth=10
+
 	" Use <localleader>1/2/3 to add headings.
 	au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=
 	au Filetype markdown nnoremap <buffer> <localleader>2 yypVr-
@@ -293,6 +327,16 @@ augroup END
 " }}}
 " }}}
 " Mappings for plugins and convenience {{{
+
+" make text uppercase
+inoremap <c-u> <esc>zviwUea
+
+" make current line a comment
+imap <c-c> <esc>mzgcc`z
+
+" zoom to head level
+nnoremap zh mzzt10<c-u>`z
+
 " neocomplete {{{
 let g:neocomplete#enable_at_startup = 1
 " }}}
@@ -300,7 +344,9 @@ let g:neocomplete#enable_at_startup = 1
 let g:unite_source_history_yank_enable=1
 let g:unite_source_history_yank_limit=1000
 
+" call unite#custom#source('file,file/new,buffer,file_rec', 'matchers', 'matcher_fuzzy')
 call unite#custom#source('file_rec', 'ignore_pattern', 'node_modules')
+
 map <C-P> :Unite -start-insert file_rec<CR>
 map <C-B> :Unite buffer<CR>
 nnoremap <space>/ :Unite grep:.<cr>
@@ -332,17 +378,17 @@ onoremap <silent> in( :<C-U>normal! f(vi(<cr>
 
 " Tabular
 if exists(":Tabularize")
-  nmap <Leader>a= :Tabularize /=<CR>
-  vmap <Leader>a= :Tabularize /=<CR>
-  nmap <Leader>a: :Tabularize /:<CR>
-  vmap <Leader>a: :Tabularize /:<CR>
+  nnoremap <Leader>a= :Tabularize /=<CR>
+  vnoremap <Leader>a= :Tabularize /=<CR>
+  nnoremap <Leader>a: :Tabularize /:<CR>
+  vnoremap <Leader>a: :Tabularize /:<CR>
 endif
 
 " clean up trailing whitespaces
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
-command Vrc :vsplit ~/.vimrc
-command Reload :source ~/.vimrc
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " Gundo
 nnoremap <F5> :GundoToggle<CR>
@@ -366,3 +412,5 @@ augroup line_return
         \     execute 'normal! g`"zvzz' |
         \ endif
 augroup END
+
+" echom \"ʕ •ᴥ•ʔ GROARRR\"
