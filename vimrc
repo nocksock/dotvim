@@ -60,7 +60,7 @@ let g:airline_right_sep = ''
 let g:airline#extensions#branch#enabled = 1
 " }}}
 " Basic Options"{{{ "
-let mapleader = ","
+let mapleader = "\<space>"
 let maplocalleader = "\\"
 
 set number
@@ -147,8 +147,8 @@ syntax on
 "}}}
 "  Statusline and listchars
 if has("gui")
-  set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
-  set statusline+=%<%f\%h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+	set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
+	" set statusline+=%<%f\%h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 endif
 
 " Better Completion
@@ -178,8 +178,6 @@ let g:evervim_devtoken='S=s18:U=1e538b:E=144db209f29:C=13d836f732d:P=1cd:A=en-de
 " save on ^s
 nnoremap <C-s> <esc>:silent :Gcommit<CR>
 inoremap <C-s> <esc>:silent :Gcommit<CR>i
-command Q q " Bind :Q to :q
-command W w " Bind :W to :w
 "}}}
 " Search Options"{{{
 nnoremap / /\v
@@ -266,10 +264,52 @@ iabbrev ldis ಠ_ಠ
 iabbrev lsad ಥ_ಥ
 iabbrev lhap ಥ‿ಥ
 "}}}
+" Folding {{{
+
+set foldlevelstart=0
+
+" Make zO recursively open whatever fold we're in, even if it's partially open.
+nnoremap zO zczO
+
+" "Focus" the current line.  Basically:
+"
+" 1. Close all folds.
+" 2. Open just the folds containing the current line.
+" 3. Move the line to a little bit (15 lines) above the center of the screen.
+" 4. Pulse the cursor line.  My eyes are bad.
+"
+" This mapping wipes out the z mark, which I never use.
+"
+" I use :sus for the rare times I want to actually background Vim.
+nnoremap <c-z> mzzMzvzz`zzz
+
+function! MyFoldText() " {{{
+    let line = getline(v:foldstart)
+
+    let nucolwidth = &fdc + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth - 3
+    let foldedlinecount = v:foldend - v:foldstart
+
+    " expand tabs into spaces
+    let onetab = strpart('          ', 0, &tabstop)
+    let line = substitute(line, '\t', onetab, 'g')
+
+    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - 2
+    return line . ' ' . repeat("⋅",fillcharcount) . ' ' . foldedlinecount . ' ⬍  '
+endfunction " }}}
+" set foldtext=MyFoldText()
+
+" }}}
 " FileType Specifics {{{
 " .HTML"{{{
 " fold current tag
-nnoremap <leader>ft Vatzf
+augroup ft_html
+	au!
+	au FileType html setlocal foldmethod=manual
+	au FileType html <buffer> <localleader>= Vat=
+	au FileType html nnoremap <leader>ft Vatzf
+augroup END
 " }}}
 " .CSS "{{{
 augroup ft_css
@@ -298,11 +338,21 @@ augroup END
 augroup ft_javascript
 	au!
 	au BufNewFile,BufRead .jshintrc setlocal filetype=javascript
+	au BufNewFile,BufRead Gruntfile setlocal filetype=javascript
+
 	au FileType javascript setlocal foldmethod=marker
-	au BufNewFile, BufRead Gruntfile setlocal filetype=javascript
-	" Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
-	" positioned inside of them AND the following code doesn't get unfolded.
-	au Filetype javascript inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
+	au FileType javascript setlocal foldmarker={,}
+
+
+	" when typing a parenthesis followed by <cr>, indent correctly without folding
+	au Filetype javascript inoremap <buffer> "{<cr>" {}<left><cr><tab>.<cr><esc>kA<bs>
+	au Filetype javascript inoremap <buffer> "(<cr>" ()<left><cr><tab>.<cr><esc>kA<bs>
+	au Filetype javascript inoremap <buffer> "[<cr>" []<left><cr><tab>.<cr><esc>kA<bs>
+
+	" only show invisble characters in normal mode. just trying to see if i like
+	" that
+	au FileType javascript :au InsertEnter *.js setlocal nolist
+	au FileType javascript :au InsertLeave *.js setlocal list
 augroup END
 " }}}
 " .PDE Processing {{{
@@ -325,6 +375,12 @@ augroup ft_markdown
 	au Filetype markdown nnoremap <buffer> <localleader>3 I### <ESC>
 augroup END
 " }}}
+" HELP {{{
+augroup ft_help
+	au!
+	au FileType help nnoremap q :close<cr>
+augroup END
+" }}}
 " }}}
 " Mappings for plugins and convenience {{{
 
@@ -340,17 +396,19 @@ nnoremap zh mzzt10<c-u>`z
 " neocomplete {{{
 let g:neocomplete#enable_at_startup = 1
 " }}}
+
 " unite.vim settings {{{
 let g:unite_source_history_yank_enable=1
 let g:unite_source_history_yank_limit=1000
 
-" call unite#custom#source('file,file/new,buffer,file_rec', 'matchers', 'matcher_fuzzy')
 call unite#custom#source('file_rec', 'ignore_pattern', 'node_modules')
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#custom#profile('files', 'filters', ['sorter_rank'])
 
-map <C-P> :Unite -start-insert file_rec<CR>
-map <C-B> :Unite buffer<CR>
-nnoremap <space>/ :Unite grep:.<cr>
+noremap <C-P> :Unite -start-insert file_rec<CR>
+nnoremap <c-b> :Unite buffer<CR>
 "}}}
+
 " syntastic {{{
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
@@ -372,6 +430,7 @@ map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
 
 nnoremap <Leader>s :call RunNearestSpec()<CR>
 nnoremap <Leader>l :call RunLastSpec()<CR>
+
 " 'in next()' textobject
 vnoremap <silent> in( :<C-U>normal! f(vi(<cr>
 onoremap <silent> in( :<C-U>normal! f(vi(<cr>
@@ -383,6 +442,12 @@ if exists(":Tabularize")
   nnoremap <Leader>a: :Tabularize /:<CR>
   vnoremap <Leader>a: :Tabularize /:<CR>
 endif
+
+" git issue stuff
+nnoremap <Leader>gg :Gstatus<cr>
+nnoremap <Leader>gi :Dispatch gh issue
+nnoremap <Leader>gii :Dispatch gh issue<cr>
+nnoremap <Leader>gin :Dispatch gh issue -lA noxoc<cr>
 
 " clean up trailing whitespaces
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
@@ -403,7 +468,36 @@ map <F3> :TagbarToggle<CR>
 " Set the tag file search order
 set tags=./tags;
 "}}}
+" Pulse Line {{{
+function! s:Pulse() " {{{
+    redir => old_hi
+        silent execute 'hi CursorLine'
+    redir END
+    let old_hi = split(old_hi, '\n')[0]
+    let old_hi = substitute(old_hi, 'xxx', '', '')
 
+    let steps = 8
+    let width = 1
+    let start = width
+    let end = steps * width
+    let color = 233
+
+    for i in range(start, end, width)
+        execute "hi CursorLine ctermbg=" . (color + i)
+        redraw
+        sleep 1m
+    endfor
+    for i in range(start, end, width)
+        execute "hi CursorLine ctermbg=" . (color + i)
+        redraw
+        sleep 1m
+    endfor
+
+    execute 'hi ' . old_hi
+endfunction " }}}
+
+command! -nargs=0 Pulse call s:Pulse()
+"}}}
 " Make sure Vim returns to the same line when you reopen a file.
 augroup line_return
     au!
