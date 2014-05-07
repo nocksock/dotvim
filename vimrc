@@ -29,7 +29,7 @@ Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell.vim'
 Bundle 'Shougo/neocomplete.vim'
 Bundle 'Shougo/unite.vim'
-Bundle 'scrooloose/nerdtree.git'
+" Bundle 'scrooloose/nerdtree.git'
 Bundle 'sjl/gundo.vim.git'
 Bundle 'terryma/vim-multiple-cursors.git'
 Bundle 'thoughtbot/vim-rspec'
@@ -85,10 +85,8 @@ set autoread
 " Don't try to highlight lines longer than 800 characters.
 set synmaxcol=800
 
-if has('gui_running')
-  set guioptions-=T
-  set guifont=Ubuntu\ Mono\ for\ Powerline:h16
-endif
+set guioptions-=T
+set guifont=Ubuntu\ Mono\ for\ Powerline:h16
 
 set laststatus=2  " Always show status line.
 
@@ -307,10 +305,12 @@ endfunction " }}}
 augroup ft_html
 	au!
 	au FileType html setlocal foldmethod=manual
-	au FileType html <buffer> <localleader>= Vat=
-	au FileType html nnoremap <leader>ft Vatzf
 augroup END
 " }}}
+augroup ft_hbs
+	au!
+	au BufNewFile,BufRead *.hbs setlocal filetype=handlebars.html
+augroup END
 " .CSS "{{{
 augroup ft_css
   au!
@@ -401,7 +401,11 @@ let g:neocomplete#enable_at_startup = 1
 let g:unite_source_history_yank_enable=1
 let g:unite_source_history_yank_limit=1000
 
-call unite#custom#source('file_rec', 'ignore_pattern', 'node_modules')
+if executable('ag')
+	let g:unite_source_rec_async_command= 'ag --nocolor --nogroup --hidden -g ""'
+endif
+
+call unite#custom#source('file_rec', 'ignore_pattern', 'bower_components/\|node_modules/\|\.git')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#custom#profile('files', 'filters', ['sorter_rank'])
 
@@ -415,7 +419,7 @@ let g:syntastic_warning_symbol='⚠'
 let g:syntastic_always_populate_loc_list = 1
 "}}}
 
-map <F4> :NERDTreeToggle<CR>
+" map <F4> :NERDTreeToggle<CR>
 
 let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
 let g:UltiSnipsEditSplit = 'vertical'
@@ -445,7 +449,8 @@ endif
 
 " git issue stuff
 nnoremap <Leader>gg :Gstatus<cr>
-nnoremap <Leader>gi :Dispatch gh issue
+nnoremap <Leader>gp :Dispatch! git push<cr>
+nnoremap <Leader>gi :Dispatch gh issue 
 nnoremap <Leader>gii :Dispatch gh issue<cr>
 nnoremap <Leader>gin :Dispatch gh issue -lA noxoc<cr>
 
@@ -453,7 +458,7 @@ nnoremap <Leader>gin :Dispatch gh issue -lA noxoc<cr>
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>:echo "sourced .vimrc"<cr>
 
 " Gundo
 nnoremap <F5> :GundoToggle<CR>
@@ -498,6 +503,8 @@ endfunction " }}}
 
 command! -nargs=0 Pulse call s:Pulse()
 "}}}
+
+command! W :wa
 " Make sure Vim returns to the same line when you reopen a file.
 augroup line_return
     au!
