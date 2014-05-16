@@ -19,7 +19,7 @@ Bundle 'gmarik/vundle'
 Bundle 'SirVer/ultisnips.git'
 Bundle 'bling/vim-airline.git'
 Bundle 'godlygeek/tabular.git'
-Bundle 'majutsushi/tagbar.git'
+" Bundle 'majutsushi/tagbar.git'
 Bundle 'mattn/emmet-vim'
 Bundle 'othree/html5.vim.git'
 Bundle 'pangloss/vim-javascript.git'
@@ -367,7 +367,6 @@ augroup ft_markdown
 	au!
 	au BufNewFile,BufRead *.m*down setlocal filetype=markdown
 	au BufNewFile,BufRead *.md setlocal filetype=markdown
-	au FileType markdown setlocal number numberwidth=10
 
 	" Use <localleader>1/2/3 to add headings.
 	au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=
@@ -466,12 +465,12 @@ nnoremap <F5> :GundoToggle<CR>
 " }}}
 " Ctags stuff {{{
 " Taglist
-let g:tagbar_type_javascript = {
-    \ 'ctagsbin' : '/usr/local/bin/jsctags'
-\ }
-map <F3> :TagbarToggle<CR>
-" Set the tag file search order
-set tags=./tags;
+" let g:tagbar_type_javascript = {
+"     \ 'ctagsbin' : '/usr/local/bin/jsctags'
+" \ }
+" map <F3> :TagbarToggle<CR>
+" " Set the tag file search order
+" set tags=./tags;
 "}}}
 " Pulse Line {{{
 function! s:Pulse() " {{{
