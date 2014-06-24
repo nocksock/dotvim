@@ -15,32 +15,34 @@ Bundle 'Lokaltog/vim-easymotion.git'
 "autoclose of brackets, parenths etc
 Bundle 'Raimondi/delimitMate.git' 
 
-Bundle 'gmarik/vundle'
+" Bundle 'majutsushi/tagbar.git'
+" Bundle 'rizzatti/dash.vim.git'
+" Bundle 'rizzatti/funcoo.vim.git'
+" Bundle 'scrooloose/nerdtree.git'
+" Bundle 'thoughtbot/vim-rspec'
+Bundle "nosami/Omnisharp"
+Bundle "scrooloose/syntastic"
+Bundle 'Shougo/neocomplete.vim'
+Bundle 'Shougo/unite.vim'
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/vimshell.vim'
 Bundle 'SirVer/ultisnips.git'
 Bundle 'bling/vim-airline.git'
+Bundle 'gmarik/vundle'
 Bundle 'godlygeek/tabular.git'
-" Bundle 'majutsushi/tagbar.git'
 Bundle 'mattn/emmet-vim'
 Bundle 'othree/html5.vim.git'
 Bundle 'pangloss/vim-javascript.git'
-Bundle 'rizzatti/dash.vim.git'
-Bundle 'rizzatti/funcoo.vim.git'
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vimshell.vim'
-Bundle 'Shougo/neocomplete.vim'
-Bundle 'Shougo/unite.vim'
-" Bundle 'scrooloose/nerdtree.git'
 Bundle 'sjl/gundo.vim.git'
 Bundle 'terryma/vim-multiple-cursors.git'
-Bundle 'thoughtbot/vim-rspec'
 Bundle 'tomasr/molokai.git'
 Bundle 'tpope/vim-commentary.git'
+Bundle 'tpope/vim-dispatch.git'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'tpope/vim-repeat.git'
 Bundle 'tpope/vim-surround.git'
-Bundle 'tpope/vim-vinegar.git'
 Bundle 'tpope/vim-unimpaired.git'
-Bundle 'tpope/vim-dispatch.git'
+Bundle 'tpope/vim-vinegar.git'
 
 filetype plugin indent on
 set nocompatible
@@ -78,6 +80,7 @@ set autoindent
 set showmatch
 set cursorline
 set showmode
+set list
 set backupdir=/tmp
 set directory=/tmp " Don't clutter my dirs up with swp and tmp files
 set autoread
@@ -93,7 +96,6 @@ set laststatus=2  " Always show status line.
 set gdefault
 set autoindent
 set visualbell
-set list
 set formatoptions=qrn1
 set undofile
 set shell=/bin/zsh
@@ -108,7 +110,6 @@ set noexpandtab
 set nowrap
 set textwidth=80
 set formatoptions=qrn1
-set colorcolumn=+1
 " }}}
 " Colors and Scheme "{{{
 
@@ -119,6 +120,9 @@ let g:molokai_original = 1
 let g:rehash256 = 1
 set background=dark
 colors molokai
+
+highlight ColorColumn ctermbg=red
+call matchadd('ColorColumn', '\%81v', 100)
 
 if has("gui_running")
   set columns=150
@@ -171,11 +175,6 @@ augroup global_autocommands
 	" Resize splits when the window is resized
 	au VimResized * exe "normal! \<c-w>="
 augroup END
-
-let g:evervim_devtoken='S=s18:U=1e538b:E=144db209f29:C=13d836f732d:P=1cd:A=en-devtoken:V=2:H=d46d47a0e515720e39eff7d7f6b626da'
-" save on ^s
-nnoremap <C-s> <esc>:silent :Gcommit<CR>
-inoremap <C-s> <esc>:silent :Gcommit<CR>i
 "}}}
 " Search Options"{{{
 nnoremap / /\v
@@ -351,8 +350,8 @@ augroup ft_javascript
 
 	" only show invisble characters in normal mode. just trying to see if i like
 	" that
-	au FileType javascript :au InsertEnter *.js setlocal nolist
-	au FileType javascript :au InsertLeave *.js setlocal list
+	au FileType javascript :au InsertLeave *.js setlocal nolist
+	au FileType javascript :au InsertEnter *.js setlocal list
 augroup END
 " }}}
 " .PDE Processing {{{
@@ -392,8 +391,38 @@ imap <c-c> <esc>mzgcc`z
 " zoom to head level
 nnoremap zh mzzt10<c-u>`z
 
+" omnisharp {{{
+autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuildAsync<cr>
+autocmd BufWritePost *.cs call OmniSharp#AddToProject()
+autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+set completeopt-=preview
+let g:OmniSharp_typeLookupInPreview = 0
+" }}}
 " neocomplete {{{
 let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist'
+        \ }
+
+if !exists('g:neocomplete#sources')
+        let g:neocomplete#sources = {}
+endif
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
+let g:neocomplete#sources.cs = ['omni']
+let g:neocomplete#enable_refresh_always = 0
+let g:echodoc_enable_at_startup = 1
+let g:neocomplete#enable_insert_char_pre = 1
 " }}}
 
 " unite.vim settings {{{
