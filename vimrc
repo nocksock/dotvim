@@ -8,52 +8,43 @@
 " needed for init
 
 filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/vundle'
+Plugin 'Lokaltog/vim-easymotion.git'
+Plugin 'Raimondi/delimitMate.git'
+Plugin 'nosami/Omnisharp'
+Plugin 'scrooloose/syntastic'
+Plugin 'Shougo/unite.vim'
+Plugin 'tomasr/molokai.git'
+Plugin 'Shougo/vimproc'
+Plugin 'SirVer/ultisnips.git'
+Plugin 'bling/vim-airline.git'
+Plugin 'godlygeek/tabular.git'
+Plugin 'mattn/emmet-vim'
+Plugin 'othree/html5.vim.git'
+Plugin 'pangloss/vim-javascript.git'
+Plugin 'editorconfig/editorconfig-vim.git'
+Plugin 'sjl/gundo.vim.git'
+Plugin 'terryma/vim-multiple-cursors.git'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-commentary.git'
+Plugin 'tpope/vim-dispatch.git'
+Plugin 'tpope/vim-fugitive.git'
+Plugin 'tpope/vim-repeat.git'
+Plugin 'tpope/vim-surround.git'
+Plugin 'tpope/vim-unimpaired.git'
+Plugin 'tpope/vim-vinegar.git'
 
-Bundle 'Lokaltog/vim-easymotion.git'
-"autoclose of brackets, parenths etc
-Bundle 'Raimondi/delimitMate.git' 
-
-" Bundle 'majutsushi/tagbar.git'
-" Bundle 'rizzatti/dash.vim.git'
-" Bundle 'rizzatti/funcoo.vim.git'
-" Bundle 'scrooloose/nerdtree.git'
-" Bundle 'thoughtbot/vim-rspec'
-Bundle "nosami/Omnisharp"
-Bundle "scrooloose/syntastic"
-Bundle 'Shougo/neocomplete.vim'
-Bundle 'Shougo/unite.vim'
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vimshell.vim'
-Bundle 'SirVer/ultisnips.git'
-Bundle 'bling/vim-airline.git'
-Bundle 'gmarik/vundle'
-Bundle 'godlygeek/tabular.git'
-Bundle 'mattn/emmet-vim'
-Bundle 'othree/html5.vim.git'
-Bundle 'pangloss/vim-javascript.git'
-Bundle 'sjl/gundo.vim.git'
-Bundle 'terryma/vim-multiple-cursors.git'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'tpope/vim-commentary.git'
-Bundle 'tpope/vim-dispatch.git'
-Bundle 'tpope/vim-fugitive.git'
-Bundle 'tpope/vim-repeat.git'
-Bundle 'tpope/vim-surround.git'
-Bundle 'tpope/vim-unimpaired.git'
-Bundle 'tpope/vim-vinegar.git'
-
+call vundle#end()
 filetype plugin indent on
+
 set nocompatible
 "}}}
-set t_Co=256
+"
+set t_Co=256 " term colors
 set encoding=utf-8
 
-" vimshell {{{
-let g:vimshell_prompt = '$ '
-let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
-" }}}
 " Airline config {{{
 let g:airline_powerline_fonts = 0
 let g:airline_theme='powerlineish'
@@ -61,14 +52,13 @@ let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline#extensions#branch#enabled = 1
 " }}}
+
 " Basic Options"{{{ "
 let mapleader = "\<space>"
 let maplocalleader = "\\"
 
 set number
 set relativenumber
-nnoremap <leader>n :setlocal nu!<CR>:setlocal rnu!<CR>
-
 set shiftround " When at 3 spaces and I hit >>, go to 4, not 5.
 set foldmethod=marker
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
@@ -77,6 +67,7 @@ set clipboard=unnamed
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
 set autoindent
+set breakindent
 set showmatch
 set cursorline
 set showmode
@@ -84,15 +75,9 @@ set list
 set backupdir=/tmp
 set directory=/tmp " Don't clutter my dirs up with swp and tmp files
 set autoread
-
-" Don't try to highlight lines longer than 800 characters.
-set synmaxcol=800
-
+set synmaxcol=160
 set guioptions-=T
-set guifont=Ubuntu\ Mono\ for\ Powerline:h16
-
 set laststatus=2  " Always show status line.
-
 set gdefault
 set autoindent
 set visualbell
@@ -129,6 +114,7 @@ if has("gui_running")
   set lines=45
   set fuoptions=maxvert,maxhorz
 endif
+
 " Trailing whitespace {{{
 " Only shown when not in insert mode so I don't go insane.
 
@@ -147,11 +133,8 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 syntax on
 "}}}
-"  Statusline and listchars
-if has("gui")
-	set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
-	" set statusline+=%<%f\%h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-endif
+"  Listchars
+set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
 
 " Better Completion
 set complete=.,w,b,u,t
@@ -165,6 +148,7 @@ set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg   " binary images
 set wildignore+=*.sw?                            " Vim swap files
 set wildignore+=*.DS_Store                       " OSX bullshit
 "}}}
+
 " Make Vim able to edit crontab files again.
 set backupskip=/tmp/*,/private/tmp/*"
 
@@ -187,8 +171,7 @@ set hlsearch
 nnoremap <leader><space> :noh<cr>
 "}}}
 " Movement "{{{
-" Keep search matches in the middle of the window and pulse the line when moving
-" to them.
+" Keep search matches in the middle of the window
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
@@ -218,11 +201,8 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 map <leader>w <C-w>v<C-w>l
-
-
-
 map <C-t> <esc>:tabnew<CR>
-map <Leader>rr :redraw!<cr>
+
 "}}}
 " Modeline Magic"{{{
 " Taken from: http://vim.wikia.com/wiki/Modeline_magic
@@ -256,11 +236,6 @@ if !isdirectory(expand(&directory))
     call mkdir(expand(&directory), "p")
 endif
 " }}}
-" Global abbreviations"{{{
-iabbrev ldis ಠ_ಠ
-iabbrev lsad ಥ_ಥ
-iabbrev lhap ಥ‿ಥ
-"}}}
 " Folding {{{
 
 set foldlevelstart=0
@@ -399,6 +374,7 @@ autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
 set completeopt-=preview
 let g:OmniSharp_typeLookupInPreview = 0
 " }}}
+
 " neocomplete {{{
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#sources#dictionary#dictionaries = {
@@ -478,7 +454,7 @@ endif
 " git issue stuff
 nnoremap <Leader>gg :Gstatus<cr>
 nnoremap <Leader>gp :Dispatch! git push<cr>
-nnoremap <Leader>gi :Dispatch gh issue 
+nnoremap <Leader>gi :Dispatch gh issue
 nnoremap <Leader>gii :Dispatch gh issue<cr>
 nnoremap <Leader>gin :Dispatch gh issue -lA noxoc<cr>
 
