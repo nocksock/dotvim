@@ -11,7 +11,6 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/vundle'
-Plugin 'Lokaltog/vim-easymotion.git'
 Plugin 'Raimondi/delimitMate.git'
 Plugin 'nosami/Omnisharp'
 Plugin 'scrooloose/syntastic'
@@ -26,8 +25,8 @@ Plugin 'othree/html5.vim.git'
 Plugin 'pangloss/vim-javascript.git'
 Plugin 'editorconfig/editorconfig-vim.git'
 Plugin 'sjl/gundo.vim.git'
-Plugin 'terryma/vim-multiple-cursors.git'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'shougo/neocomplete.vim.git'
 Plugin 'tpope/vim-commentary.git'
 Plugin 'tpope/vim-dispatch.git'
 Plugin 'tpope/vim-fugitive.git'
@@ -409,12 +408,13 @@ if executable('ag')
 	let g:unite_source_rec_async_command= 'ag --nocolor --nogroup --hidden -g ""'
 endif
 
-call unite#custom#source('file_rec', 'ignore_pattern', 'bower_components/\|node_modules/\|\.git')
+call unite#custom#source('file_rec', 'ignore_pattern', 'bower_components/\|\.sass-cache/\|node_modules/\|\.git')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#custom#profile('files', 'filters', ['sorter_rank'])
 
 noremap <C-P> :Unite -start-insert file_rec<CR>
-nnoremap <c-b> :Unite buffer<CR>
+nnoremap <c-b> :Unite buffer<cr>
+nnoremap <Leader>y :Unite history/yank<cr>
 "}}}
 
 " syntastic {{{
@@ -509,6 +509,8 @@ command! -nargs=0 Pulse call s:Pulse()
 "}}}
 
 command! W :wa
+command! Fth :set ft=html
+command! Ftp :set ft=php
 " Make sure Vim returns to the same line when you reopen a file.
 augroup line_return
     au!
