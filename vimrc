@@ -14,9 +14,9 @@ Plugin 'gmarik/vundle'
 Plugin 'Raimondi/delimitMate.git'
 Plugin 'nosami/Omnisharp'
 Plugin 'scrooloose/syntastic'
-Plugin 'Shougo/unite.vim'
 Plugin 'tomasr/molokai.git'
 Plugin 'Shougo/vimproc'
+Plugin 'kien/ctrlp.vim.git'
 Plugin 'SirVer/ultisnips.git'
 Plugin 'bling/vim-airline.git'
 Plugin 'godlygeek/tabular.git'
@@ -399,23 +399,6 @@ let g:neocomplete#enable_refresh_always = 0
 let g:echodoc_enable_at_startup = 1
 let g:neocomplete#enable_insert_char_pre = 1
 " }}}
-
-" unite.vim settings {{{
-let g:unite_source_history_yank_enable=1
-let g:unite_source_history_yank_limit=1000
-
-if executable('ag')
-	let g:unite_source_rec_async_command= 'ag --nocolor --nogroup --hidden -g ""'
-endif
-
-call unite#custom#source('file_rec', 'ignore_pattern', 'bower_components/\|\.sass-cache/\|node_modules/\|\.git')
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#custom#profile('files', 'filters', ['sorter_rank'])
-
-noremap <C-P> :Unite -start-insert file_rec<CR>
-nnoremap <c-b> :Unite buffer<cr>
-nnoremap <Leader>y :Unite history/yank<cr>
-"}}}
 
 " syntastic {{{
 let g:syntastic_error_symbol='✗'
