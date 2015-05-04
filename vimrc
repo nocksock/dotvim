@@ -38,7 +38,7 @@ filetype plugin indent on
 
 set nocompatible
 "}}}
-"
+
 set t_Co=256 " term colors
 set encoding=utf-8
 
@@ -49,7 +49,6 @@ let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline#extensions#branch#enabled = 1
 " }}}
-
 " Basic Options"{{{ "
 let mapleader = "\<space>"
 let maplocalleader = "\\"
