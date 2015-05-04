@@ -275,12 +275,14 @@ endfunction " }}}
 " fold current tag
 augroup ft_html
 	au!
-	au FileType html setlocal foldmethod=manual
+	au FileType html setlocal foldmethod=syntax
+	au Filetype html setlocal noexpandtab
 augroup END
 " }}}
 augroup ft_hbs
 	au!
 	au BufNewFile,BufRead *.hbs setlocal filetype=handlebars.html
+	au BufNewFile,BufRead *.handlebars setlocal filetype=handlebars.html
 augroup END
 " .CSS "{{{
 augroup ft_css
