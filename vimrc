@@ -244,12 +244,11 @@ nnoremap zO zczO
 " 1. Close all folds.
 " 2. Open just the folds containing the current line.
 " 3. Move the line to a little bit (15 lines) above the center of the screen.
-" 4. Pulse the cursor line.  My eyes are bad.
 "
 " This mapping wipes out the z mark, which I never use.
 "
 " I use :sus for the rare times I want to actually background Vim.
-nnoremap <c-z> mzzMzvzz`zzz
+nnoremap <leader>z mzzMzvzz`zzz
 
 function! MyFoldText() " {{{
     let line = getline(v:foldstart)
@@ -401,10 +400,19 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
-let g:neocomplete#sources.cs = ['omni']
 let g:neocomplete#enable_refresh_always = 0
 let g:echodoc_enable_at_startup = 1
 let g:neocomplete#enable_insert_char_pre = 1
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+
+let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
 " }}}
 
 " syntastic {{{
@@ -413,21 +421,11 @@ let g:syntastic_warning_symbol='⚠'
 let g:syntastic_always_populate_loc_list = 1
 "}}}
 
-" map <F4> :NERDTreeToggle<CR>
-
 let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
 let g:UltiSnipsEditSplit = 'vertical'
 
 " Toggle "keep current line centered" mode
-nnoremap <leader>C :let &scrolloff=999-&scrolloff<cr>
-
-" Edit another file in the same directory as the current file
-" uses expression to extract path from current file's path
-map <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
-map <Leader>v :vnew <C-R>=expand("%:p:h") . '/'<CR>
-
-nnoremap <Leader>s :call RunNearestSpec()<CR>
-nnoremap <Leader>l :call RunLastSpec()<CR>
+nnoremap <leader>c :let &scrolloff=999-&scrolloff<cr>
 
 " 'in next()' textobject
 vnoremap <silent> in( :<C-U>normal! f(vi(<cr>
@@ -451,8 +449,7 @@ nnoremap <Leader>gin :Dispatch gh issue -lA noxoc<cr>
 " clean up trailing whitespaces
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>:echo "sourced .vimrc"<cr>
+nnoremap <leader>ev :vsplit $MYVIMRC<cr> nnoremap <leader>sv :source $MYVIMRC<cr>:echo "sourced .vimrc"<cr>
 
 " Gundo
 nnoremap <F5> :GundoToggle<CR>
@@ -510,4 +507,4 @@ augroup line_return
         \ endif
 augroup END
 
-" echom \"ʕ •ᴥ•ʔ GROARRR\"
+" echom "ʕ •ᴥ•ʔ GROARRR"
