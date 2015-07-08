@@ -1,4 +1,7 @@
 " encoding: utf 8
+" remap  sv :source $MYVIMRC
+" :echo "sourced .vimrc"
+"
 "
 " Welcome to my crib.
 "
@@ -11,6 +14,7 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/vundle'
+Plugin 'mileszs/ack.vim.git'
 Plugin 'Raimondi/delimitMate.git'
 Plugin 'nosami/Omnisharp'
 Plugin 'scrooloose/syntastic'
@@ -21,6 +25,7 @@ Plugin 'bling/vim-airline.git'
 Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim.git'
 Plugin 'pangloss/vim-javascript.git'
+Plugin 'evidens/vim-twig.git'
 Plugin 'sjl/gundo.vim.git'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'shougo/neocomplete.vim.git'
@@ -106,6 +111,7 @@ highlight ColorColumn ctermbg=red
 call matchadd('ColorColumn', '\%81v', 100)
 
 if has("gui_running")
+  set guifont=Envy\ Code\ R:h16
   set columns=150
   set lines=45
   set fuoptions=maxvert,maxhorz
@@ -268,6 +274,13 @@ endfunction " }}}
 " set foldtext=MyFoldText()
 
 " }}}
+" load local .vim if present {{{
+let b:thisdir=expand("%:p:h")
+let b:vim=b:thisdir."/.vim"
+if (filereadable(b:vim))
+    execute "source ".b:vim
+endif
+"}}}
 " FileType Specifics {{{
 " .HTML"{{{
 " fold current tag
@@ -281,6 +294,10 @@ augroup ft_hbs
 	au!
 	au BufNewFile,BufRead *.hbs setlocal filetype=handlebars.html
 	au BufNewFile,BufRead *.handlebars setlocal filetype=handlebars.html
+augroup END
+augroup ft_mustache
+	au!
+	au BufNewFile,BufRead *.mustache setlocal filetype=mustache.html
 augroup END
 " .CSS "{{{
 augroup ft_css
@@ -362,6 +379,15 @@ imap <c-c> <esc>mzgcc`z
 
 " zoom to head level
 nnoremap zh mzzt10<c-u>`z
+nnoremap <c-b> :CtrlPBuffer<cr>
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.?(git|hg|svn|bower_components|node_modules)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
 
 " omnisharp {{{
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
@@ -369,7 +395,8 @@ autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuildAsync<cr>
 autocmd BufWritePost *.cs call OmniSharp#AddToProject()
 autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
 set completeopt-=preview
-let g:OmniSharp_typeLookupInPreview = 0
+let g:OmniSharp_selector_ui = 'ctrlp'  " Use ctrlp.vim
+let g:OmniSharp_typeLookupInPreview = 1
 " }}}
 
 " neocomplete {{{
@@ -404,6 +431,15 @@ let g:neocomplete#enable_refresh_always = 0
 let g:echodoc_enable_at_startup = 1
 let g:neocomplete#enable_insert_char_pre = 1
 
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  " return neocomplete#close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -411,8 +447,6 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-
-let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
 " }}}
 
 " syntastic {{{
@@ -449,7 +483,8 @@ nnoremap <Leader>gin :Dispatch gh issue -lA noxoc<cr>
 " clean up trailing whitespaces
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
-nnoremap <leader>ev :vsplit $MYVIMRC<cr> nnoremap <leader>sv :source $MYVIMRC<cr>:echo "sourced .vimrc"<cr>
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>:echo "sourced .vimrc"<cr>
 
 " Gundo
 nnoremap <F5> :GundoToggle<CR>
@@ -508,3 +543,6 @@ augroup line_return
 augroup END
 
 " echom "ʕ •ᴥ•ʔ GROARRR"
+" remap  sv :source $MYVIMRC
+" :echo "sourced .vimrc"
+"
