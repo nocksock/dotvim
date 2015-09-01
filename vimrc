@@ -20,6 +20,7 @@ Plugin 'nosami/Omnisharp'
 Plugin 'scrooloose/syntastic'
 Plugin 'tomasr/molokai.git'
 Plugin 'kien/ctrlp.vim.git'
+Plugin 'unblevable/quick-scope.git'
 Plugin 'SirVer/ultisnips.git'
 Plugin 'bling/vim-airline.git'
 Plugin 'mattn/emmet-vim'
@@ -72,6 +73,7 @@ set breakindent
 set showmatch
 set cursorline
 set showmode
+set splitbelow
 set list
 set backupdir=/tmp
 set directory=/tmp " Don't clutter my dirs up with swp and tmp files
@@ -529,6 +531,7 @@ endfunction " }}}
 
 command! -nargs=0 Pulse call s:Pulse()
 "}}}
+"
 
 command! W :wa
 command! Fth :set ft=html
