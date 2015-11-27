@@ -13,16 +13,16 @@
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+
 Plugin 'gmarik/vundle'
 Plugin 'mileszs/ack.vim.git'
 Plugin 'Raimondi/delimitMate.git'
 Plugin 'nosami/Omnisharp'
+Plugin 'mxv/vim-jsx.git'
 Plugin 'scrooloose/syntastic'
 Plugin 'tomasr/molokai.git'
 Plugin 'kien/ctrlp.vim.git'
-Plugin 'unblevable/quick-scope.git'
 Plugin 'SirVer/ultisnips.git'
-Plugin 'bling/vim-airline.git'
 Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim.git'
 Plugin 'pangloss/vim-javascript.git'
@@ -38,6 +38,10 @@ Plugin 'tpope/vim-repeat.git'
 Plugin 'tpope/vim-surround.git'
 Plugin 'tpope/vim-unimpaired.git'
 Plugin 'tpope/vim-vinegar.git'
+Plugin 'bling/vim-airline.git'
+
+" Plugin 'Shougo/echodoc.vim.git'
+" Plugin 'unblevable/quick-scope.git'
 
 call vundle#end()
 filetype plugin indent on
@@ -196,6 +200,14 @@ inoremap jk <ESC>
 nnoremap g; g;zz
 nnoremap g, g,zz
 
+nnoremap B ^
+nnoremap E $
+nnoremap ^ <nop>
+nnoremap $ <nop>
+
+" highlight last inserted text
+nnoremap gV `[v`]
+
 " }}}
 " Window Management "{{{
 
@@ -242,38 +254,9 @@ endif
 " }}}
 " Folding {{{
 
-set foldlevelstart=0
-
-" Make zO recursively open whatever fold we're in, even if it's partially open.
-nnoremap zO zczO
-
-" "Focus" the current line.  Basically:
-"
-" 1. Close all folds.
-" 2. Open just the folds containing the current line.
-" 3. Move the line to a little bit (15 lines) above the center of the screen.
-"
-" This mapping wipes out the z mark, which I never use.
-"
-" I use :sus for the rare times I want to actually background Vim.
-nnoremap <leader>z mzzMzvzz`zzz
-
-function! MyFoldText() " {{{
-    let line = getline(v:foldstart)
-
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
-    let foldedlinecount = v:foldend - v:foldstart
-
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
-
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - 2
-    return line . ' ' . repeat("⋅",fillcharcount) . ' ' . foldedlinecount . ' ⬍  '
-endfunction " }}}
-" set foldtext=MyFoldText()
+set foldenable
+set foldlevelstart=10
+set foldnestmax=10
 
 " }}}
 " load local .vim if present {{{
@@ -367,7 +350,7 @@ augroup END
 " HELP {{{
 augroup ft_help
 	au!
-	au FileType help nnoremap q :close<cr>
+	" au FileType help nnoremap q :close<cr>
 augroup END
 " }}}
 " }}}
@@ -399,6 +382,7 @@ autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
 set completeopt-=preview
 let g:OmniSharp_selector_ui = 'ctrlp'  " Use ctrlp.vim
 let g:OmniSharp_typeLookupInPreview = 1
+let g:omnicomplete_fetch_documentation=1
 " }}}
 
 " neocomplete {{{
@@ -455,7 +439,8 @@ autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
 let g:syntastic_always_populate_loc_list = 1
-"}}}
+let g:syntastic_javascript_checkers = ['jsxhint']
+" }}}
 
 let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
 let g:UltiSnipsEditSplit = 'vertical'
@@ -483,7 +468,8 @@ nnoremap <Leader>gii :Dispatch gh issue<cr>
 nnoremap <Leader>gin :Dispatch gh issue -lA noxoc<cr>
 
 " clean up trailing whitespaces
-nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+nnoremap <leader>ws :%s/\s\+$//<cr>:let @/=''<CR>
+nnoremap <leader>ww :%s/\s\+$//e<cr> :%s/\n\{3,}/\r\r/e<cr>
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>:echo "sourced .vimrc"<cr>
@@ -492,50 +478,7 @@ nnoremap <leader>sv :source $MYVIMRC<cr>:echo "sourced .vimrc"<cr>
 nnoremap <F5> :GundoToggle<CR>
 
 " }}}
-" Ctags stuff {{{
-" Taglist
-" let g:tagbar_type_javascript = {
-"     \ 'ctagsbin' : '/usr/local/bin/jsctags'
-" \ }
-" map <F3> :TagbarToggle<CR>
-" " Set the tag file search order
-" set tags=./tags;
-"}}}
-" Pulse Line {{{
-function! s:Pulse() " {{{
-    redir => old_hi
-        silent execute 'hi CursorLine'
-    redir END
-    let old_hi = split(old_hi, '\n')[0]
-    let old_hi = substitute(old_hi, 'xxx', '', '')
 
-    let steps = 8
-    let width = 1
-    let start = width
-    let end = steps * width
-    let color = 233
-
-    for i in range(start, end, width)
-        execute "hi CursorLine ctermbg=" . (color + i)
-        redraw
-        sleep 1m
-    endfor
-    for i in range(start, end, width)
-        execute "hi CursorLine ctermbg=" . (color + i)
-        redraw
-        sleep 1m
-    endfor
-
-    execute 'hi ' . old_hi
-endfunction " }}}
-
-command! -nargs=0 Pulse call s:Pulse()
-"}}}
-"
-
-command! W :wa
-command! Fth :set ft=html
-command! Ftp :set ft=php
 " Make sure Vim returns to the same line when you reopen a file.
 augroup line_return
     au!
@@ -545,7 +488,7 @@ augroup line_return
         \ endif
 augroup END
 
+
+nnoremap <leader>s :mksession<cr>
+
 " echom "ʕ •ᴥ•ʔ GROARRR"
-" remap  sv :source $MYVIMRC
-" :echo "sourced .vimrc"
-"
