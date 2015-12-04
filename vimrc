@@ -159,7 +159,7 @@ set wildignore+=*.DS_Store                       " OSX bullshit
 
 " Make Vim able to edit crontab files again.
 set backupskip=/tmp/*,/private/tmp/*"
-
+command W :w
 " Save when losing focus
 augroup global_autocommands
 	autocmd!
@@ -199,11 +199,6 @@ inoremap jk <ESC>
 " Same when jumping around
 nnoremap g; g;zz
 nnoremap g, g,zz
-
-nnoremap B ^
-nnoremap E $
-nnoremap ^ <nop>
-nnoremap $ <nop>
 
 " highlight last inserted text
 nnoremap gV `[v`]
@@ -273,6 +268,7 @@ augroup ft_html
 	au!
 	au FileType html setlocal foldmethod=syntax
 	au Filetype html setlocal noexpandtab
+  au FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 augroup END
 " }}}
 augroup ft_hbs
@@ -316,6 +312,7 @@ augroup ft_javascript
 	au FileType javascript setlocal foldmethod=marker
 	au FileType javascript setlocal foldmarker={,}
 
+  au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 	" when typing a parenthesis followed by <cr>, indent correctly without folding
 	au Filetype javascript inoremap <buffer> "{<cr>" {}<left><cr><tab>.<cr><esc>kA<bs>
@@ -340,6 +337,8 @@ augroup ft_markdown
 	au!
 	au BufNewFile,BufRead *.m*down setlocal filetype=markdown
 	au BufNewFile,BufRead *.md setlocal filetype=markdown
+
+  au FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
 
 	" Use <localleader>1/2/3 to add headings.
 	au Filetype markdown nnoremap <buffer> <localleader>1 yypVr=
@@ -375,14 +374,22 @@ let g:ctrlp_custom_ignore = {
   \ }
 
 " omnisharp {{{
-autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuildAsync<cr>
-autocmd BufWritePost *.cs call OmniSharp#AddToProject()
-autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-set completeopt-=preview
+"
+augroup ft_csharp
+	au!
+
+	au FileType cs setlocal omnifunc=OmniSharp#Complete
+	au FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuildAsync<cr>
+	au FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+
+	au BufWritePost *.cs call OmniSharp#AddToProject()
+augroup END
+
 let g:OmniSharp_selector_ui = 'ctrlp'  " Use ctrlp.vim
-let g:OmniSharp_typeLookupInPreview = 1
+" let g:OmniSharp_typeLookupInPreview = 1
 let g:omnicomplete_fetch_documentation=1
+
+autocmd FileType cs set splitbelow
 " }}}
 
 " neocomplete {{{
@@ -425,15 +432,6 @@ function! s:my_cr_function()
   " For no inserting <CR> key.
   return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-" }}}
 
 " syntastic {{{
 let g:syntastic_error_symbol='✗'
