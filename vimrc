@@ -39,6 +39,8 @@ Plugin 'tpope/vim-surround.git'
 Plugin 'tpope/vim-unimpaired.git'
 Plugin 'tpope/vim-vinegar.git'
 Plugin 'bling/vim-airline.git'
+Plugin 'jiangmiao/auto-pairs.git'
+
 
 " Plugin 'Shougo/echodoc.vim.git'
 " Plugin 'unblevable/quick-scope.git'
@@ -159,8 +161,8 @@ set wildignore+=*.DS_Store                       " OSX bullshit
 
 " Make Vim able to edit crontab files again.
 set backupskip=/tmp/*,/private/tmp/*"
-command W :w
 " Save when losing focus
+command! W :w
 augroup global_autocommands
 	autocmd!
 	au FocusLost * :wa
@@ -213,6 +215,7 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 map <leader>w <C-w>v<C-w>l
 map <C-t> <esc>:tabnew<CR>
+map <c-x> <C-w><c-x>
 
 "}}}
 " Modeline Magic"{{{
@@ -313,11 +316,6 @@ augroup ft_javascript
 	au FileType javascript setlocal foldmarker={,}
 
   au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-
-	" when typing a parenthesis followed by <cr>, indent correctly without folding
-	au Filetype javascript inoremap <buffer> "{<cr>" {}<left><cr><tab>.<cr><esc>kA<bs>
-	au Filetype javascript inoremap <buffer> "(<cr>" ()<left><cr><tab>.<cr><esc>kA<bs>
-	au Filetype javascript inoremap <buffer> "[<cr>" []<left><cr><tab>.<cr><esc>kA<bs>
 
 	" only show invisble characters in normal mode. just trying to see if i like
 	" that
