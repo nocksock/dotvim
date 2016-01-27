@@ -7,48 +7,52 @@
 "
 " Author: Nils Riedemann
 
-" Vundle Stuff {{{
+" Plug Stuff {{{
 " needed for init
-
-filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'mileszs/ack.vim.git'
-Plugin 'Raimondi/delimitMate.git'
-Plugin 'nosami/Omnisharp.git'
-Plugin 'mxw/vim-jsx.git'
-Plugin 'scrooloose/syntastic.git'
-Plugin 'tomasr/molokai.git'
-Plugin 'kien/ctrlp.vim.git'
-Plugin 'SirVer/ultisnips.git'
-Plugin 'mattn/emmet-vim.git'
-Plugin 'othree/html5.vim.git'
-Plugin 'pangloss/vim-javascript.git'
-Plugin 'evidens/vim-twig.git'
-Plugin 'sjl/gundo.vim.git'
-Plugin 'airblade/vim-gitgutter.git'
-Plugin 'shougo/neocomplete.vim.git'
-Plugin 'godlygeek/tabular.git'
-Plugin 'tpope/vim-commentary.git'
-Plugin 'tpope/vim-dispatch.git'
-Plugin 'tpope/vim-fugitive.git'
-Plugin 'tpope/vim-repeat.git'
-Plugin 'tpope/vim-surround.git'
-Plugin 'tpope/vim-unimpaired.git'
-Plugin 'tpope/vim-vinegar.git'
-Plugin 'bling/vim-airline.git'
-Plugin 'jiangmiao/auto-pairs.git'
-
-
-" Plugin 'Shougo/echodoc.vim.git'
-" Plugin 'unblevable/quick-scope.git'
-
-call vundle#end()
-filetype plugin indent on
+"
+" Load vim-plug
 
 set nocompatible
+
+if empty(glob("~/.vim/autoload/plug.vim"))
+    execute '!curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+endif
+
+filetype off
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'mileszs/ack.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'nosami/Omnisharp', {'for' : 'cs'}
+Plug 'mxw/vim-jsx', {'for' : [ 'javascript' ]}
+Plug 'scrooloose/syntastic'
+Plug 'tomasr/molokai'
+Plug 'kien/ctrlp.vim'
+Plug 'SirVer/ultisnips'
+Plug 'mattn/emmet-vim'
+Plug 'othree/html5.vim'
+Plug 'pangloss/vim-javascript', {'for' : ['javascript']}
+Plug 'evidens/vim-twig'
+Plug 'sjl/gundo.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/fzf.vim'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'shougo/neocomplete.vim'
+Plug 'godlygeek/tabular'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar'
+Plug 'bling/vim-airline'
+Plug 'jiangmiao/auto-pairs'
+
+call plug#end()
+
+filetype plugin indent on
 "}}}
 
 set t_Co=256 " term colors
