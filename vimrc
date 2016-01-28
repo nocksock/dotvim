@@ -485,7 +485,9 @@ augroup line_return
         \ endif
 augroup END
 
-
 nnoremap <leader>s :mksession<cr>
 
-" echom "ʕ •ᴥ•ʔ GROARRR"
+if file_readable(".vim")
+	source .vim
+	echom ".vim sourced"
+endif
