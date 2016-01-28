@@ -30,18 +30,15 @@ Plug 'scrooloose/syntastic'
 Plug 'tomasr/molokai'
 Plug 'kien/ctrlp.vim'
 Plug 'SirVer/ultisnips'
-Plug 'mattn/emmet-vim'
-Plug 'othree/html5.vim'
+Plug 'mattn/emmet-vim', {'for': 'html'}
+Plug 'othree/html5.vim', {'for' : 'html'}
 Plug 'pangloss/vim-javascript', {'for' : ['javascript']}
-Plug 'evidens/vim-twig'
+Plug 'evidens/vim-twig', {'for' : 'twig'}
 Plug 'sjl/gundo.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/fzf.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'shougo/neocomplete.vim'
-Plug 'godlygeek/tabular'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
