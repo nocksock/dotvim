@@ -25,12 +25,13 @@ call plug#begin('~/.vim/plugged')
 Plug 'mileszs/ack.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'nosami/Omnisharp', {'for' : 'cs'}
+Plug 'tpope/vim-dispatch', {'for' : 'cs'}
 Plug 'mxw/vim-jsx', {'for' : [ 'javascript' ]}
 Plug 'scrooloose/syntastic'
 Plug 'tomasr/molokai'
 Plug 'kien/ctrlp.vim'
 Plug 'SirVer/ultisnips'
-Plug 'mattn/emmet-vim', {'for': 'html'}
+Plug 'mattn/emmet-vim', {'for': ['html', 'mustache', 'mustache.html']}
 Plug 'othree/html5.vim', {'for' : 'html'}
 Plug 'pangloss/vim-javascript', {'for' : ['javascript']}
 Plug 'evidens/vim-twig', {'for' : 'twig'}
@@ -44,7 +45,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
-Plug 'bling/vim-airline'
+" Plug 'bling/vim-airline'
 Plug 'jiangmiao/auto-pairs'
 
 call plug#end()
@@ -56,11 +57,13 @@ set t_Co=256 " term colors
 set encoding=utf-8
 
 " Airline config {{{
-let g:airline_powerline_fonts = 0
-let g:airline_theme='powerlineish'
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline#extensions#branch#enabled = 1
+" let g:airline_powerline_fonts = 0
+" let g:airline_theme='powerlineish'
+" let g:airline_left_sep = ''
+" let g:airline_right_sep = ''
+" let g:airline_section_a = airline#section#create(['mode', 'crypt'])
+" let g:airline_section_z = ''
+" let g:airline#extensions#branch#enabled = 1
 " }}}
 " Basic Options"{{{ "
 let mapleader = "\<space>"
@@ -258,13 +261,6 @@ set foldlevelstart=10
 set foldnestmax=10
 
 " }}}
-" load local .vim if present {{{
-let b:thisdir=expand("%:p:h")
-let b:vim=b:thisdir."/.vim"
-if (filereadable(b:vim))
-    execute "source ".b:vim
-endif
-"}}}
 " FileType Specifics {{{
 " .HTML"{{{
 " fold current tag
