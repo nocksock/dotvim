@@ -22,31 +22,46 @@ filetype off
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'tomasr/molokai'
+
 Plug 'mileszs/ack.vim'
 Plug 'Raimondi/delimitMate'
-Plug 'nosami/Omnisharp', {'for' : 'cs'}
-Plug 'tpope/vim-dispatch', {'for' : 'cs'}
-Plug 'mxw/vim-jsx', {'for' : [ 'javascript' ]}
-Plug 'scrooloose/syntastic'
-Plug 'tomasr/molokai'
-Plug 'kien/ctrlp.vim'
-Plug 'SirVer/ultisnips'
-Plug 'mattn/emmet-vim', {'for': ['html', 'mustache', 'mustache.html']}
-Plug 'othree/html5.vim', {'for' : 'html'}
-Plug 'pangloss/vim-javascript', {'for' : ['javascript']}
-Plug 'evidens/vim-twig', {'for' : 'twig'}
-Plug 'sjl/gundo.vim'
-Plug 'airblade/vim-gitgutter'
-Plug 'editorconfig/editorconfig-vim'
 Plug 'shougo/neocomplete.vim'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-vinegar'
-" Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'jiangmiao/auto-pairs'
+
+Plug 'scrooloose/syntastic'
+Plug 'SirVer/ultisnips'
+Plug 'sjl/gundo.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-fugitive'
+
+" file navigation
+Plug 'tpope/vim-vinegar'
+Plug 'kien/ctrlp.vim'
+
+" c-sharp
+Plug 'nosami/Omnisharp', {'for' : 'cs'}
+Plug 'tpope/vim-dispatch', {'for' : 'cs'}
+
+" js stuff
+Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+Plug 'mxw/vim-jsx', {'for' : [ 'javascript' ]}
+Plug 'othree/yajs.vim', { 'for': 'javascript' }
+Plug 'elzr/vim-json'
+
+" css
+Plug 'hail2u/vim-css3-syntax', {'for': ['css', 'sass']}
+
+" html, mustache etc
+Plug 'mattn/emmet-vim', {'for': ['html', 'mustache', 'mustache.html','php']}
+Plug 'othree/html5.vim', {'for' : 'html'}
+Plug 'evidens/vim-twig', {'for' : 'twig'}
 
 call plug#end()
 
@@ -57,13 +72,14 @@ set t_Co=256 " term colors
 set encoding=utf-8
 
 " Airline config {{{
-" let g:airline_powerline_fonts = 0
-" let g:airline_theme='powerlineish'
-" let g:airline_left_sep = ''
-" let g:airline_right_sep = ''
-" let g:airline_section_a = airline#section#create(['mode', 'crypt'])
-" let g:airline_section_z = ''
-" let g:airline#extensions#branch#enabled = 1
+"
+let g:airline_powerline_fonts = 0
+let g:airline_theme='powerlineish'
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline_section_a = airline#section#create(['mode', 'crypt'])
+let g:airline_section_z = ''
+let g:airline#extensions#branch#enabled = 1
 " }}}
 " Basic Options"{{{ "
 let mapleader = "\<space>"
@@ -151,8 +167,8 @@ syntax on
 set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
 
 " Better Completion
-set complete=.,w,b,u,t
-set completeopt=longest,menuone,preview
+" set complete=.,w,b,u,t
+" set completeopt=longest,menuone,preview
 
 " Wildmenu "{{{
 set wildmode=longest,list,full
@@ -205,6 +221,8 @@ inoremap jk <ESC>
 " Same when jumping around
 nnoremap g; g;zz
 nnoremap g, g,zz
+nnoremap j gj
+nnoremap k gk
 
 " highlight last inserted text
 nnoremap gV `[v`]
@@ -312,7 +330,7 @@ augroup ft_javascript
 	au FileType javascript setlocal foldmethod=marker
 	au FileType javascript setlocal foldmarker={,}
 
-  au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  au FileType javascript setlocal omnifunc=ternjs#Complete
 
 	" only show invisble characters in normal mode. just trying to see if i like
 	" that
@@ -418,7 +436,6 @@ let g:neocomplete#sources#omni#input_patterns.cs = '.*[^=\);]'
 let g:neocomplete#enable_refresh_always = 0
 let g:echodoc_enable_at_startup = 1
 let g:neocomplete#enable_insert_char_pre = 1
-
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
