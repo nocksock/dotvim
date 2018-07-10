@@ -31,8 +31,9 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'vim-airline/vim-airline'
 Plug 'jiangmiao/auto-pairs'
+Plug 'posva/vim-vue'
+Plug 'joshdick/onedark.vim'
 
 Plug 'scrooloose/syntastic'
 Plug 'SirVer/ultisnips'
@@ -45,23 +46,20 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'kien/ctrlp.vim'
 
-" c-sharp
-Plug 'nosami/Omnisharp', {'for' : 'cs'}
-Plug 'tpope/vim-dispatch', {'for' : 'cs'}
-
 " js stuff
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-Plug 'mxw/vim-jsx', {'for' : [ 'javascript' ]}
-Plug 'othree/yajs.vim', { 'for': 'javascript' }
+Plug 'stephpy/vim-php-cs-fixer', { 'for': ['php'] }
+Plug 'mxw/vim-jsx'
 Plug 'elzr/vim-json'
+Plug 'othree/yajs.vim'
 
 " css
 Plug 'hail2u/vim-css3-syntax', {'for': ['css', 'sass']}
 
 " html, mustache etc
-Plug 'mattn/emmet-vim', {'for': ['html', 'mustache', 'mustache.html','php']}
+Plug 'mattn/emmet-vim', {'for': ['html', 'mustache', 'mustache.html','php','javascript', 'jsx']}
 Plug 'othree/html5.vim', {'for' : 'html'}
-Plug 'evidens/vim-twig', {'for' : 'twig'}
+Plug 'lumiliet/vim-twig', {'for' : 'twig'}
 
 call plug#end()
 
@@ -71,19 +69,21 @@ filetype plugin indent on
 set t_Co=256 " term colors
 set encoding=utf-8
 
-" Airline config {{{
-"
-let g:airline_powerline_fonts = 0
-let g:airline_theme='powerlineish'
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline_section_a = airline#section#create(['mode', 'crypt'])
-let g:airline_section_z = ''
-let g:airline#extensions#branch#enabled = 1
-" }}}
+if !empty($TMUX)
+	set termguicolors
+	set t_8b=[48;2;%lu;%lu;%lum
+	set t_8f=[38;2;%lu;%lu;%lum
+endif
+
+if (has("termguicolors"))
+	set termguicolors
+end
+
 " Basic Options"{{{ "
 let mapleader = "\<space>"
 let maplocalleader = "\\"
+
+let g:vim_json_syntax_conceal = 0
 
 set number
 set relativenumber
@@ -113,7 +113,6 @@ set visualbell
 set formatoptions=qrn1
 set undofile
 set shell=/bin/zsh
-let g:user_zen_leader_key = '<c-y>'
 set t_ut=
 
 " Tabs, spaces, wrapping {{{
@@ -164,7 +163,7 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 syntax on
 "}}}
 "  Listchars
-set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪
+set listchars=tab:\|⋅,eol:¬,trail:-,extends:↩,precedes:↪,space:·
 
 " Better Completion
 " set complete=.,w,b,u,t
@@ -193,6 +192,7 @@ augroup END
 " Search Options"{{{
 nnoremap / /\v
 vnoremap / /\v
+vnoremap // y/<C-R>"<CR>
 set ignorecase
 set smartcase
 set incsearch
@@ -334,8 +334,6 @@ augroup ft_javascript
 
 	" only show invisble characters in normal mode. just trying to see if i like
 	" that
-	au FileType javascript :au InsertLeave *.js setlocal nolist
-	au FileType javascript :au InsertEnter *.js setlocal list
 augroup END
 " }}}
 " .PDE Processing {{{
@@ -367,6 +365,7 @@ augroup END
 " }}}
 " }}}
 " Mappings for plugins and convenience {{{
+"
 
 " make text uppercase
 inoremap <c-u> <esc>zviwUea
@@ -404,6 +403,8 @@ let g:omnicomplete_fetch_documentation=1
 
 autocmd FileType cs set splitbelow
 " }}}
+"
+let g:netrw_bufsettings = "noma nomod nu nobl nowrap ro rnu"
 
 " neocomplete {{{
 let g:neocomplete#enable_at_startup = 1
@@ -449,9 +450,10 @@ endfunction
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_javascript_checkers = ['jsxhint']
+let g:syntastic_javascript_checkers = ['eslint']
 " }}}
 
+let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 let g:tlist_javascript_settings = 'javascript;s:string;a:array;o:object;f:function'
 let g:UltiSnipsEditSplit = 'vertical'
 
@@ -461,6 +463,9 @@ nnoremap <leader>c :let &scrolloff=999-&scrolloff<cr>
 " 'in next()' textobject
 vnoremap <silent> in( :<C-U>normal! f(vi(<cr>
 onoremap <silent> in( :<C-U>normal! f(vi(<cr>
+
+" search for visually selected text
+vnoremap <expr> // 'y/\V'.escape(@",'\').'<CR>'
 
 " Tabular
 if exists(":Tabularize")
@@ -504,3 +509,5 @@ if file_readable(".vim")
 	source .vim
 	echom ".vim sourced"
 endif
+
+set conceallevel=0
